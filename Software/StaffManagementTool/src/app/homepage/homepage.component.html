@@ -1,0 +1,105 @@
+<div class="container">
+  <p>
+    <a  class="btn btn-success btn-lg" (click)="AddProject.show()">
+      <span class="glyphicon glyphicon-plus"></span>Add Project
+    </a>
+  </p>
+</div>
+
+<!--
+Add Popup Html Code
+-->
+
+<div class="modal fade" bsModal #AddProject="bs-modal" [config]="{backdrop: 'static'}"
+     tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">Adding the Project</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="AddProject.hide()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="AddProjectForm" (ngSubmit)="AddProjectDetails(AddProjectForm.value)">
+          <div class="form-group" [ngClass]="{'has-error':!AddProjectForm.controls['projectName'].valid && AddProjectForm.controls['projectName'].touched}">
+            <label>Project Name :</label>
+            <input class="form-control" type="text" placeholder="Project Name" [formControl]="AddProjectForm.controls['projectName']">
+            <div *ngIf="AddProjectForm.controls['projectName'].hasError('required') && AddProjectForm.controls['projectName'].touched" class="alert alert-danger">
+              You must include a Product Name
+            </div>
+          </div>
+          <div class="form-group" [ngClass]="{'has-error':!AddProjectForm.controls['projectDescription'].valid && AddProjectForm.controls['projectDescription'].touched}">
+            <label>Project Description :</label>
+            <input class="form-control" type="text" placeholder="Project Description" [formControl]="AddProjectForm.controls['projectDescription']">
+            <div *ngIf="AddProjectForm.controls['projectDescription'].hasError('required') && AddProjectForm.controls['projectDescription'].touched" class="alert alert-danger">
+              You must include a Product Description
+            </div>
+          </div>
+          <div class="form-group" [ngClass]="{'has-error':!AddProjectForm.controls['projectStartDate'].valid && AddProjectForm.controls['projectStartDate'].touched}">
+            <label>Start Date :</label>
+            <input class="form-control" type="Date" [formControl]="AddProjectForm.controls['projectStartDate']">
+            <div *ngIf="AddProjectForm.controls['projectStartDate'].hasError('required') && AddProjectForm.controls['projectStartDate'].touched" class="alert alert-danger">
+              You must include a Start Date of your Project
+            </div>
+          </div>
+          <div class="form-group" [ngClass]="{'has-error':!AddProjectForm.controls['projectEndDate'].valid && AddProjectForm.controls['projectEndDate'].touched}">
+            <label>End Date :</label>
+            <input class="form-control" type="Date" [formControl]="AddProjectForm.controls['projectEndDate']">
+            <div *ngIf="AddProjectForm.controls['projectEndDate'].hasError('required') && AddProjectForm.controls['projectEndDate'].touched" class="alert alert-danger">
+              You must include a End Date of your Project
+            </div>
+          </div>
+          <div class="form-group" [ngClass]="{'has-error':!AddProjectForm.controls['projectStatus'].valid && AddProjectForm.controls['projectStatus'].touched}">
+            <label>Project Status :</label>
+            <select name="projectStatus" class="form-control" [formControl]="AddProjectForm.controls['projectStatus']">
+              <option value="ALL">ALL</option>
+              <option value="Active">Active</option>
+              <option value="InActive">InActive</option>
+            </select>
+            <div *ngIf="AddProjectForm.controls['projectStatus'].hasError('required') && AddProjectForm.controls['projectStatus'].touched" class="alert alert-danger">
+              You must include Project Status
+            </div>
+          </div>
+          <div class="col-sm pull-right">
+            <button type="button" class="btn btn-danger" (click)="AddProject.hide()">Cancel</button>
+
+            <button type="submit" class="btn btn-primary" >Submit</button>
+          </div>
+        </form>
+        <div class="modal-footer">
+          <h4 class="modal-title pull-right"></h4>
+          <div class="col-sm-4"></div>
+          <div class="col-sm-4"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!--
+Delete the Project
+-->
+
+
+<div bsModal #DeleteProjectDetails="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">Delete Project</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hideDeleteProjectDetails()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Do You want to delete the project {{projectName}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary pull-right" (click)="hideDeleteProjectDetails()">Cancel</button>
+        <button type="button" class="btn btn-primary pull-right" (click)="DeleteTheRecordFormTheArray()">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
