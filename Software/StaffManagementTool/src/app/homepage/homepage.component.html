@@ -1,3 +1,5 @@
+<!--                                         Add Project Button                                         -->
+
 <div class="container">
   <p>
     <a  class="btn btn-success btn-lg" (click)="AddProject.show()">
@@ -6,16 +8,27 @@
   </p>
 </div>
 
-<!--
-Add Popup Html Code
--->
+
+<!--                                         Add Staff Button                                         -->
+<div *ngIf="allProjectDetails.length > 0">
+  <div class="container">
+    <p>
+      <a  class="btn btn-success btn-lg" (click)="AddStaff.show()">
+        <span class="glyphicon glyphicon-plus"></span>Add Staff
+      </a>
+    </p>
+  </div>
+</div>
+
+
+<!--                                         Add Project Popup Html Code                                         -->
 
 <div class="modal fade" bsModal #AddProject="bs-modal" [config]="{backdrop: 'static'}"
      tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-md">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title pull-left">Adding the Project</h4>
+        <h4 class="modal-title pull-left">Add Project</h4>
         <button type="button" class="close pull-right" aria-label="Close" (click)="AddProject.hide()">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -26,14 +39,14 @@ Add Popup Html Code
             <label>Project Name :</label>
             <input class="form-control" type="text" placeholder="Project Name" [formControl]="AddProjectForm.controls['projectName']">
             <div *ngIf="AddProjectForm.controls['projectName'].hasError('required') && AddProjectForm.controls['projectName'].touched" class="alert alert-danger">
-              You must include a Product Name
+              You must include a Project Name
             </div>
           </div>
           <div class="form-group" [ngClass]="{'has-error':!AddProjectForm.controls['projectDescription'].valid && AddProjectForm.controls['projectDescription'].touched}">
             <label>Project Description :</label>
             <input class="form-control" type="text" placeholder="Project Description" [formControl]="AddProjectForm.controls['projectDescription']">
             <div *ngIf="AddProjectForm.controls['projectDescription'].hasError('required') && AddProjectForm.controls['projectDescription'].touched" class="alert alert-danger">
-              You must include a Product Description
+              You must include a Project Description
             </div>
           </div>
           <div class="form-group" [ngClass]="{'has-error':!AddProjectForm.controls['projectStartDate'].valid && AddProjectForm.controls['projectStartDate'].touched}">
@@ -53,7 +66,6 @@ Add Popup Html Code
           <div class="form-group" [ngClass]="{'has-error':!AddProjectForm.controls['projectStatus'].valid && AddProjectForm.controls['projectStatus'].touched}">
             <label>Project Status :</label>
             <select name="projectStatus" class="form-control" [formControl]="AddProjectForm.controls['projectStatus']">
-              <option value="ALL">ALL</option>
               <option value="Active">Active</option>
               <option value="InActive">InActive</option>
             </select>
@@ -64,7 +76,7 @@ Add Popup Html Code
           <div class="col-sm pull-right">
             <button type="button" class="btn btn-danger" (click)="AddProject.hide()">Cancel</button>
 
-            <button type="submit" class="btn btn-primary" >Submit</button>
+            <button type="submit" class="btn btn-primary" [disabled]="!AddProjectForm.valid">Submit</button>
           </div>
         </form>
         <div class="modal-footer">
@@ -78,28 +90,84 @@ Add Popup Html Code
 </div>
 
 
-<!--
-Delete the Project
--->
 
 
-<div bsModal #DeleteProjectDetails="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+<!--                                         Add Staff Popup Html Code                                         -->
+
+
+<div class="modal fade" bsModal #AddStaff="bs-modal" [config]="{backdrop: 'static'}"
+     tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-md">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title pull-left">Delete Project</h4>
-        <button type="button" class="close pull-right" aria-label="Close" (click)="hideDeleteProjectDetails()">
+        <h4 class="modal-title pull-left">Add Staff</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="AddStaff.hide()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        Do You want to delete the project {{projectName}}
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary pull-right" (click)="hideDeleteProjectDetails()">Cancel</button>
-        <button type="button" class="btn btn-primary pull-right" (click)="DeleteTheRecordFormTheArray()">OK</button>
+      <form [formGroup]="AddStaffForm" (ngSubmit)="AddStaffDetails(AddStaffForm.value)">
+        <div class="form-group" [ngClass]="{'has-error':!AddStaffForm.controls['firstName'].valid && AddStaffForm.controls['firstName'].touched}">
+          <label>First Name :</label>
+          <input class="form-control" type="text" placeholder="First Name" [formControl]="AddStaffForm.controls['firstName']">
+          <div *ngIf="AddStaffForm.controls['firstName'].hasError('required') && AddStaffForm.controls['firstName'].touched" class="alert alert-danger">
+            First Name is a Mandatory Field
+          </div>
+        </div>
+        <div class="form-group" [ngClass]="{'has-error':!AddStaffForm.controls['lastName'].valid && AddStaffForm.controls['lastName'].touched}">
+          <label>Last Name :</label>
+          <input class="form-control" type="text" placeholder="Last Name" [formControl]="AddStaffForm.controls['lastName']">
+          <div *ngIf="AddStaffForm.controls['lastName'].hasError('required') && AddStaffForm.controls['lastName'].touched" class="alert alert-danger">
+            Last Name is a Mandatory Field
+          </div>
+        </div>
+        <div class="form-group" [ngClass]="{'has-error':!AddStaffForm.controls['staffRole'].valid && AddStaffForm.controls['staffRole'].touched}">
+          <label>Role :</label>
+          <input class="form-control" type="text" placeholder="Role" [formControl]="AddStaffForm.controls['staffRole']">
+          <div *ngIf="AddStaffForm.controls['staffRole'].hasError('required') && AddStaffForm.controls['staffRole'].touched" class="alert alert-danger">
+            Staff Role is a Mandatory Field
+          </div>
+        </div>
+        <div class="form-group" [ngClass]="{'has-error':!AddStaffForm.controls['staffStatus'].valid && AddStaffForm.controls['staffStatus'].touched}">
+          <label>Status :</label>
+          <select name="staffStatus" class="form-control" [formControl]="AddStaffForm.controls['staffStatus']">
+            <option value="Active">Active</option>
+            <option value="InActive">InActive</option>
+          </select>
+          <div *ngIf="AddStaffForm.controls['staffStatus'].hasError('required') && AddStaffForm.controls['staffStatus'].touched" class="alert alert-danger">
+            Staff Status is a Mandatory Field
+          </div>
+        </div>
+        <div class="form-group" [ngClass]="{'has-error':!AddStaffForm.controls['projectsAssigned'].valid && AddStaffForm.controls['projectsAssigned'].touched}">
+          <label>Projects :</label>
+          <tag-input formControlName="projectsAssigned"
+                     [(ngModel)]='projectsDataForTagInput'
+                     (onBlur)="onInputBlurred($event)"
+                     (onFocus)="onInputFocused($event)"
+                     (onSelect)="onSelected($event)"
+                     (onRemove)="onItemRemoved($event)"
+                     (onTextChange)="onTextChange($event)"
+                     (onAdd)="onItemAdded($event)">
+          </tag-input>
+          <div *ngIf="AddStaffForm.controls['projectsAssigned'].hasError('required') && AddStaffForm.controls['projectsAssigned'].touched" class="alert alert-danger">
+            Project Selection is a Mandatory Field
+          </div>
+        </div>
+        <br>
+        <div class="modal-footer">
+          <h4 class="modal-title pull-right"></h4>
+          <div class="col-sm-4"></div>
+          <div class="col-sm-4"></div>
+          <div class="col-sm pull-right">
+            <button type="button"  class="btn btn-danger" (click)="AddStaff.hide()">CANCEL</button>
+            <button type="submit" class="btn btn-primary" [disabled]="!AddStaffForm.valid">SUBMIT</button>
+          </div>
+        </div>
+      </form>
+
       </div>
     </div>
   </div>
 </div>
+
 

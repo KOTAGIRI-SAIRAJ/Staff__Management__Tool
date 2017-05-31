@@ -1,0 +1,242 @@
+<!--                     Auto Completer for Staff Details, DropDown Box, Search Button                     -->
+
+<div *ngIf="allStaffDetails.length> 0">
+  <div class="container">
+    <div class="col-sm-4">
+      <ng-select [allowClear]="true"
+                 [items]="allStaffForAutoComplter"
+                 (data)="refreshValue($event)"
+                 (selected)="selected($event)"
+                 (removed)="removed($event)"
+                 (typed)="typed($event)"
+                 placeholder="No Staff Name selected">
+      </ng-select>
+    </div>
+    <div class="col-sm-4">
+      <select name="SelectedValue" class="form-control" [(ngModel)]="SelectedDropDown">
+        <option value=""></option>
+        <option value="Active">Active</option>
+        <option value="InActive">InActive</option>
+      </select>
+    </div>
+    <div class="col-sm-4">
+      <button type="button" class="btn btn-info" (click)="OnclickSearchBar()">
+        <span class="glyphicon glyphicon-search"></span> Search
+      </button>
+    </div>
+  </div>
+</div>
+
+
+
+<!--                                         DataTable For Staff Details                                         -->
+<div class="container">
+  <h1>Staff Data Table</h1>
+  <table class="table table-striped" [mfData]="allStaffDetails" #mf="mfDataTable" [mfRowsOnPage]="5">
+    <thead>
+    <tr>
+      <th style="width: 15%">
+        <mfDefaultSorter by="Item_Name">First Name</mfDefaultSorter>
+      </th>
+      <th style="width: 15%">
+        <mfDefaultSorter by="Actual_Price_of_Product">Last Name</mfDefaultSorter>
+      </th>
+      <th style="width: 15%">
+        <mfDefaultSorter by="Quantity">Role</mfDefaultSorter>
+      </th>
+      <th style="width: 15%" type="number">
+        <mfDefaultSorter by="Amount">Status</mfDefaultSorter>
+      </th>
+      <th style="width: 15%" type="number">
+        <mfDefaultSorter by="Date">Assigned Projects</mfDefaultSorter>
+      </th>
+      <th style="width: 25%">
+        <mfDefaultSorter by="mobnum">Options</mfDefaultSorter>
+      </th>
+    </tr>
+    </thead>
+    <div *ngIf="allStaffDetails.length === 0">
+      <h2>No Staff Members...!!</h2>
+    </div>
+    <tbody>
+
+    <tbody>
+    <tr bgcolor="#fffaf0" *ngFor="let item of allStaffDetails">
+      <td>{{item.firstName}}</td>
+      <td>{{item.lastName}}</td>
+      <td>{{item.staffRole}}</td>
+      <td>{{item.staffStatus}}</td>
+      <td>{{item.projectsAssigned}}</td>
+      <td>
+        <button type="button" class="btn btn-info" (click)="ViewStaffdata(item)">View</button>
+        &emsp;
+        <button type="button" class="btn btn-primary " (click)="EditStaffData(item)">Edit</button>&emsp;
+        <button type="button" class="btn btn-danger" (click)="DeleteStaffData(item)">Delete</button>
+      </td>
+    </tr>
+    </tbody>
+    <tfoot>
+    <tr>
+      <td colspan="4">
+        <mfBootstrapPaginator [rowsOnPageSet]="[5]"></mfBootstrapPaginator>
+      </td>
+    </tr>
+    </tfoot>
+  </table>
+</div>
+
+<!--                                         View Staff Data                                         -->
+<div bsModal #viewStaffDetails="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">View Staff Details</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hideViewStaffDetails()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group row">
+          <div class="col-md-6">
+            <label> First Name :</label>
+          </div>
+          <div class="col-md-4">
+            <label>{{firstName}}</label>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-md-6">
+            <label> Last Name :</label>
+          </div>
+          <div class="col-md-4">
+            <label>{{lastName}}</label>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-md-6">
+            <label>Role:</label>
+          </div>
+          <div class="col-md-4">
+            <label>{{staffRole}}</label>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-md-6">
+            <label>Status :</label>
+          </div>
+          <div class="col-md-4">
+            <label>{{staffStatus}}</label>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-md-6">
+            <label> Projects Assigned :</label>
+          </div>
+          <div class="col-md-4">
+            <label>{{projectsAssigned}}</label>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary pull-right" (click)="hideViewStaffDetails()">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!--                                         Edit Staff Details Popup                                         -->
+
+<div class="modal fade" bsModal #StaffEditPopup="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">Edit Staff Details</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="StaffEditPopup.hide()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="StaffEditFrom" (ngSubmit)="AddStaffDetails(StaffEditFrom.value)">
+          <div class="form-group" [ngClass]="{'has-error':!StaffEditFrom.controls['firstName'].valid && StaffEditFrom.controls['firstName'].touched}">
+            <label>First Name :</label>
+            <input class="form-control" type="text" placeholder="Project Name" [formControl]="StaffEditFrom.controls['firstName']">
+            <div *ngIf="StaffEditFrom.controls['firstName'].hasError('required') && StaffEditFrom.controls['firstName'].touched" class="alert alert-danger">
+              You must include a First Name
+            </div>
+          </div>
+          <div class="form-group" [ngClass]="{'has-error':!StaffEditFrom.controls['lastName'].valid && StaffEditFrom.controls['lastName'].touched}">
+            <label>Last Name :</label>
+            <input class="form-control" type="text" placeholder="Project Name" [formControl]="StaffEditFrom.controls['lastName']">
+            <div *ngIf="StaffEditFrom.controls['lastName'].hasError('required') && StaffEditFrom.controls['lastName'].touched" class="alert alert-danger">
+              You must include a Last Name
+            </div>
+          </div>
+          <div class="form-group" [ngClass]="{'has-error':!StaffEditFrom.controls['staffRole'].valid && StaffEditFrom.controls['staffRole'].touched}">
+            <label>Role :</label>
+            <input class="form-control" type="text" [formControl]="StaffEditFrom.controls['staffRole']">
+            <div *ngIf="StaffEditFrom.controls['staffRole'].hasError('required') && StaffEditFrom.controls['staffRole'].touched" class="alert alert-danger">
+              You must include Staff Role
+            </div>
+          </div>
+          <div class="form-group" [ngClass]="{'has-error':!StaffEditFrom.controls['staffStatus'].valid && StaffEditFrom.controls['staffStatus'].touched}">
+            <label>Status :</label>
+            <select name="staffStatus" class="form-control" [formControl]="StaffEditFrom.controls['staffStatus']">
+              <option value="Active">Active</option>
+              <option value="InActive">InActive</option>
+            </select>
+            <div *ngIf="StaffEditFrom.controls['staffStatus'].hasError('required') && StaffEditFrom.controls['staffStatus'].touched" class="alert alert-danger">
+              You must include Staff Status
+            </div>
+          </div>
+          <div class="form-group" [ngClass]="{'has-error':!StaffEditFrom.controls['projectsAssigned'].valid && StaffEditFrom.controls['projectsAssigned'].touched}">
+            <label>Project Assigned :</label>
+            <tag-input formControlName="projectsAssigned" [(ngModel)]='projectsAssigned' (onBlur)="onInputBlurred($event)" (onFocus)="onInputFocused($event)" (onSelect)="onSelected($event)" (onRemove)="onItemRemoved($event)" (onTextChange)="onTextChange($event)" (onAdd)="onItemAdded($event)">
+            </tag-input>
+            <div *ngIf="StaffEditFrom.controls['projectsAssigned'].hasError('required') && StaffEditFrom.controls['projectsAssigned'].touched" class="alert alert-danger">
+              You must include Assigned Projects
+            </div>
+          </div>
+          <div class="modal-footer">
+            <h4 class="modal-title pull-right"></h4>
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4"></div>
+
+          <div class="col-sm pull-right">
+            <button type="button" class="btn btn-danger" (click)="StaffEditPopup.hide()">Cancel</button>
+
+            <button type="submit" class="btn btn-primary" [disabled]="!StaffEditFrom.valid">Submit</button>
+          </div>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!--                                         Delete Staff Popup                                         -->
+
+<div bsModal #DeleteStaffDetails="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">Delete Staff</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hideDeleteProjectDetails()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Do You want to delete the Staff Member
+        <p><b>{{firstName}}</b></p>
+      </div>
+
+      <div class="modal-footer btn-toolbar" role="toolbar" aria-label="...">
+        <button type="button" class="btn btn-primary pull-right" (click)="DeleteTheRecordFormTheArray()">Submit</button>
+        <button type="button" class="btn btn-danger pull-right" (click)="hideDeleteProjectDetails()">Cancel</button>
+      </div>
+
+    </div>
+  </div>
+</div>

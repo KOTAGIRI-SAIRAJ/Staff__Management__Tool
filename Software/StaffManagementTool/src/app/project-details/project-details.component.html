@@ -1,53 +1,79 @@
-<h1 >Project Data Table</h1>
-<table class="table table-striped" [mfData]="allProjectDetails" #mf="mfDataTable" [mfRowsOnPage]="5">
-  <thead>
-  <tr>
-    <th style="width: 15%">
-      <mfDefaultSorter by="Item_Name">Project Name</mfDefaultSorter>
-    </th>
-    <th style="width: 15%">
-      <mfDefaultSorter by="Actual_Price_of_Product">Project Description</mfDefaultSorter>
-    </th>
-    <th style="width: 15%">
-      <mfDefaultSorter by="Quantity">Start Date</mfDefaultSorter>
-    </th>
-    <th style="width: 15%" type="number">
-      <mfDefaultSorter by="Amount">End Date</mfDefaultSorter>
-    </th>
-    <th style="width: 15%" type="number">
-      <mfDefaultSorter by="Date">Status</mfDefaultSorter>
-    </th>
-    <th style=" width: 25%">
-      <mfDefaultSorter by="mobnum">Options</mfDefaultSorter>
-    </th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr bgcolor="#fffaf0" *ngFor="let item of allProjectDetails">
-    <td>{{item.projectName}}</td>
-    <td>{{item.projectDescription}}</td>
-    <td>{{item.projectStartDate}}</td>
-    <td>{{item.projectEndDate}}</td>
-    <td>{{item.projectStatus}}</td>
-    <td>
-      <button type="button" class="btn btn-primary " (click)="ViewProjectdata(item)">View</button>
-      &emsp;<button type="button" class="btn btn-primary " (click)="EditProjectData(item)">Edit</button>&emsp;
-      <button type="button" class="btn btn-primary" (click)="DeleteProjectData(item)">Delete</button></td>
-  </tr>
-  </tbody>
-  <tfoot>
-  <tr>
-    <td colspan="4">
-      <mfBootstrapPaginator [rowsOnPageSet]="[5]"></mfBootstrapPaginator>
-    </td>
-  </tr>
-  </tfoot>
-</table>
+<!--                                         AutoCompleter for the Projects                                         -->
+
+<div *ngIf="allProjectsForAutoComplter.length> 0">
+  <div class="container">
+    <div class="col-sm-4">
+      <ng-select [allowClear]="true"
+                 [items]="allProjectsForAutoComplter"
+                 (data)="refreshValue($event)"
+                 (selected)="selected($event)"
+                 (removed)="removed($event)"
+                 (typed)="typed($event)"
+                 placeholder="No Project Name selected">
+      </ng-select>
+    </div>
+  </div>
+</div>
 
 
-<!--
-View Project Details
--->
+<!--                                         DataTable for Projects                                         -->
+<div class="container">
+  <h1>Project Data Table</h1>
+  <table class="table table-striped" [mfData]="allProjectDetails" #mf="mfDataTable" [mfRowsOnPage]="5">
+    <thead>
+    <tr>
+      <th style="width: 15%">
+        <mfDefaultSorter by="Item_Name">Project Name</mfDefaultSorter>
+      </th>
+      <th style="width: 15%">
+        <mfDefaultSorter by="Actual_Price_of_Product">Project Description</mfDefaultSorter>
+      </th>
+      <th style="width: 15%">
+        <mfDefaultSorter by="Quantity">Start Date</mfDefaultSorter>
+      </th>
+      <th style="width: 15%" type="number">
+        <mfDefaultSorter by="Amount">End Date</mfDefaultSorter>
+      </th>
+      <th style="width: 15%" type="number">
+        <mfDefaultSorter by="Date">Status</mfDefaultSorter>
+      </th>
+      <th style=" width: 25%">
+        <mfDefaultSorter by="mobnum">Options</mfDefaultSorter>
+      </th>
+    </tr>
+    </thead>
+    <div *ngIf="allProjectDetails.length === 0">
+      <h2>No Projects...!!</h2>
+    </div>
+    <tbody>
+
+    <tr bgcolor="#fffaf0" *ngFor="let item of allProjectDetails">
+      <td>{{item.projectName}}</td>
+      <td>{{item.projectDescription}}</td>
+      <td>{{item.projectStartDate}}</td>
+      <td>{{item.projectEndDate}}</td>
+      <td>{{item.projectStatus}}</td>
+      <td>
+        <button type="button" class="btn btn-info " (click)="ViewProjectdata(item)">View</button>
+        &emsp;
+        <button type="button" class="btn btn-primary " (click)="EditProjectData(item)">Edit</button>&emsp;
+        <button type="button" class="btn btn-danger" (click)="DeleteProjectData(item)">Delete</button>
+      </td>
+    </tr>
+
+    </tbody>
+    <tfoot>
+    <tr>
+      <td colspan="4">
+        <mfBootstrapPaginator [rowsOnPageSet]="[5]"></mfBootstrapPaginator>
+      </td>
+    </tr>
+    </tfoot>
+  </table>
+</div>
+
+<!--                                         View Project Details                                         -->
+
 <div bsModal #viewProjectDetails="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-md">
     <div class="modal-content">
@@ -58,48 +84,65 @@ View Project Details
         </button>
       </div>
       <div class="modal-body">
-        <div class="form-group">
-          <label class="col-md-4">Project Name:</label>
-          <label class="col-md-4">{{projectName}}</label>
+        <div class="form-group row">
+          <div class="col-md-6">
+            <label> Project Name :</label>
+          </div>
+          <div class="col-md-4">
+            <label>{{projectName}}</label>
+          </div>
         </div>
-        <div class="form-group">
-          <label class="col-md-4">Project Description:</label>
-          <label class="col-md-4">{{projectDescription}}</label>
+        <div class="form-group row">
+          <div class="col-md-6">
+            <label> Project Description :</label>
+          </div>
+          <div class="col-md-4">
+            <label>{{projectDescription}}</label>
+          </div>
         </div>
-        <div class="form-group">
-          <label class="col-md-4">Start Date:</label>
-          <label class="col-md-4">{{projectStartDate}}</label>
+        <div class="form-group row">
+          <div class="col-md-6">
+            <label> Start Date :</label>
+          </div>
+          <div class="col-md-4">
+            <label>{{projectStartDate}}</label>
+          </div>
         </div>
-        <div class="form-group">
-          <label class="col-md-4">End Date:</label>
-          <label class="col-md-4">{{projectEndDate}}</label>
+        <div class="form-group row">
+          <div class="col-md-6">
+            <label> End Date :</label>
+          </div>
+          <div class="col-md-4">
+            <label>{{projectEndDate}}</label>
+          </div>
         </div>
-        <div class="form-group">
-          <label class="col-md-4">Status:</label>
-          <label class="col-md-4">{{projectStatus}}</label>
+        <div class="form-group row">
+          <div class="col-md-6">
+            <label> Project Status :</label>
+          </div>
+          <div class="col-md-4">
+            <label>{{projectStatus}}</label>
+          </div>
         </div>
       </div>
+
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary pull-left" (click)="hideViewProjectDetails()">Submit</button>
+        <button type="button" class="btn btn-primary pull-right" (click)="hideViewProjectDetails()">Submit</button>
       </div>
     </div>
   </div>
 </div>
 
-<!--
-Edit Project Details
--->
 
 
 
-
-  <div class="modal fade" bsModal #EditPopup="bs-modal" [config]="{backdrop: 'static'}"
-     tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+<!--                                         Edit Project Details                                         -->
+<div class="modal fade" bsModal #EditPopup="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md ">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title pull-left">Adding the Project</h4>
-        <button type="button" class="close pull-right" aria-label="Close" (click)="AddProject.hide()">
+        <h4 class="modal-title pull-left">Edit Project Details</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="EditPopup.hide()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -109,14 +152,14 @@ Edit Project Details
             <label>Project Name :</label>
             <input class="form-control" type="text" placeholder="Project Name" [formControl]="EditForm.controls['projectName']">
             <div *ngIf="EditForm.controls['projectName'].hasError('required') && EditForm.controls['projectName'].touched" class="alert alert-danger">
-              You must include a Product Name
+              You must include a Project Name
             </div>
           </div>
           <div class="form-group" [ngClass]="{'has-error':!EditForm.controls['projectDescription'].valid && EditForm.controls['projectDescription'].touched}">
             <label>Project Description :</label>
             <input class="form-control" type="text" placeholder="Project Description" [formControl]="EditForm.controls['projectDescription']">
             <div *ngIf="EditForm.controls['projectDescription'].hasError('required') && EditForm.controls['projectDescription'].touched" class="alert alert-danger">
-              You must include a Product Description
+              You must include a Project Description
             </div>
           </div>
           <div class="form-group" [ngClass]="{'has-error':!EditForm.controls['projectStartDate'].valid && EditForm.controls['projectStartDate'].touched}">
@@ -136,7 +179,6 @@ Edit Project Details
           <div class="form-group" [ngClass]="{'has-error':!EditForm.controls['projectStatus'].valid && EditForm.controls['projectStatus'].touched}">
             <label>Project Status :</label>
             <select name="projectStatus" class="form-control" [formControl]="EditForm.controls['projectStatus']">
-              <option value="ALL">ALL</option>
               <option value="Active">Active</option>
               <option value="InActive">InActive</option>
             </select>
@@ -144,89 +186,46 @@ Edit Project Details
               You must include Project Status
             </div>
           </div>
-          <div class="col-sm pull-right">
-            <button type="button" class="btn btn-danger" (click)="AddProject.hide()">Cancel</button>
+          <div class="modal-footer">
+            <h4 class="modal-title pull-right"></h4>
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4"></div>
 
-            <button type="submit" class="btn btn-primary" >Submit</button>
+          <div class="col-sm pull-right">
+            <button type="button" class="btn btn-danger" (click)="EditPopup.hide()">Cancel</button>
+
+            <button type="submit" class="btn btn-primary" [disabled]="!EditForm.valid">Submit</button>
+          </div>
           </div>
         </form>
-        <div class="modal-footer">
-          <h4 class="modal-title pull-right"></h4>
-          <div class="col-sm-4"></div>
-          <div class="col-sm-4"></div>
-        </div>
       </div>
+
     </div>
   </div>
 </div>
 
 
-
-
-<!--
-<div bsModal #EditProjectDetails="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-md">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title pull-left">Edit Project Details</h4>
-        <button type="button" class="close pull-right" aria-label="Close" (click)="hideEditProjectDetails()">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label>Project Name:</label>
-          <input type="text" class="form-control"  value="{{projectName}}" name="projectName" [(ngModel)]="projectname" id="projectName">
-          <span *ngIf="(projectname && projectname.length)>20">Minimum 20 characters Required</span>
-        </div>
-        <div class="form-group">
-          <label>Project Description:</label>
-          <input type="text" class="form-control"  value="{{projectDescription}}" name="projectDescription" [(ngModel)]="projectdescription" id="projectDescription">
-          <span *ngIf="(projectdescription && projectdescription.length)>20">Minimum 20 characters Required</span>
-        </div>
-        <div class="form-group">
-          <label>Start Date:</label>
-          <input type="Date" class="form-control"  value="{{projectStartDate}}" name="projectStartDate" [(ngModel)]="projectStartDate" id="projectStartDate">
-          <span *ngIf="(projectstartDate && projectstartDate.length)<0">Minimum 20 characters Required</span>
-        </div>
-        <div class="form-group">
-          <label>End Date:</label>
-          <input type="Date" class="form-control"  value="{{projectEndDate}}" name="projectEndDate" [(ngModel)]="projectendDate" id="projectEndDate">
-        </div>
-        <div class="form-group">
-          <label>Status:</label>
-          <input type="text" class="form-control"  value="{{projectStatus}}" name="projectStatus" [(ngModel)]="projectstatus" id="projectStatus">
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary pull-left" (click)="hideEditProjectDetails()">Cancel</button>
-        <button type="button" class="btn btn-danger pull-left" (click)="getTheProjectDataFromTheForm()" [disabled]="(((projectName && projectName.length)>20 )|| ((projectDescription && projectDescription.length)>20))">Submit</button>
-      </div>
-    </div>
-  </div>
-</div>
--->
-
-<!--
-Delete the Popup
--->
+<!--                                         Delete the Popup                                         -->
 
 <div bsModal #DeleteProjectDetails="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-md">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title pull-left">Edit Project Details</h4>
+        <h4 class="modal-title pull-left">Delete Project</h4>
         <button type="button" class="close pull-right" aria-label="Close" (click)="hideDeleteProjectDetails()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        Do You want to delete the project {{projectName}}
+        Do You want to delete the project
+        <p><b>{{projectName}}</b>
+        </p>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger pull-right" (click)="hideDeleteProjectDetails()">Cancel</button>
-        &emsp;
+      <div class="modal-footer btn-toolbar" role="toolbar" aria-label="...">
+
         <button type="button" class="btn btn-primary pull-right" (click)="DeleteTheRecordFormTheArray()">Submit</button>
+        &emsp;
+        <button type="button" class="btn btn-danger pull-right" (click)="hideDeleteProjectDetails()">Cancel</button>
       </div>
     </div>
   </div>
